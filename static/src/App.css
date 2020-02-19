@@ -1,0 +1,27 @@
+@import '~antd/dist/antd.css';
+
+#contents .logo {
+    width: 120px;
+    height: 64px;
+    font-size: 16px;
+    white-space: nowrap;
+    font-weight: bold;
+    float: left;
+    text-align: center;
+}
+
+#userInfoDropdown {
+    float: right;
+    height: 64px;
+}
+
+.ant-menu-horizontal>.nounderline.ant-menu-item:hover,
+.ant-menu-horizontal>.nounderline.ant-menu-submenu:hover,
+.ant-menu-horizontal>.nounderline.ant-menu-item-active,
+.ant-menu-horizontal>.nounderline.ant-menu-submenu-active,
+.ant-menu-horizontal>.nounderline.ant-menu-item-open,
+.ant-menu-horizontal>.nounderline.ant-menu-submenu-open,
+.ant-menu-horizontal>.nounderline.ant-menu-item-selected,
+.ant-menu-horizontal>.nounderline.ant-menu-submenu-selected {
+    border-bottom: none !important;
+}
