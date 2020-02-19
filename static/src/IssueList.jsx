@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'; // ES6s
 import querySearch from "stringquery";
-import {Button, Icon, Collapse} from 'antd'
+import {Button, Icon, Collapse, Table} from 'antd'
 
 import IssueAdd from  "./IssueAdd.jsx";
 import IssueFilter from './IssueFilter.jsx'
@@ -11,67 +11,42 @@ import IssueFilter from './IssueFilter.jsx'
 const { Panel } = Collapse
 
 function IssueTable(props) {
-    const issueRows = props.issues.map(issue => <IssueRow
-        key={issue._id} issue={issue} deleteIssue={props.deleteIssue}
-    />)
+    function handleDeleteClick(id){
+        props.deleteIssue(id)
+    }
+    const dataSource = props.issues.map(issue => {
+        issue = Object.assign({}, issue, {key:issue._id});
+        return issue;
+    } );
+    const columns= [
+            {title: 'Id',dataIndex: '_id', key: '_id',
+            render: (text, record) => {
+                return (
+                <Link to={`/issues/${record._id}`}>{record._id.substr(-4)}</Link>
+            )}
+        },
+            {title: 'Status',dataIndex: 'status', key: 'status'},
+            {title: 'Owner',dataIndex: 'owner', key: 'owner'},
+            {title: 'Created',dataIndex: 'created', key: 'created',
+                render: (text, record) => (
+                    record.created.toDateString()
+                )},
+            {title: 'Effort',dataIndex: 'effort', key: 'effort'},
+            {title: 'Completion Date',dataIndex: 'completionDate', key: 'completionDate',
+                render: (text, record) => (
+                    record.completionDate ? record.completionDate.toDateString() : null
+                )},
+            {title: 'Title',dataIndex: 'title', key: 'title'},
+            {title: 'Action', key: 'action',
+                render: (text, record) => (
+                    <Button type="primary" icon='delete' size="small" onClick={() => (handleDeleteClick(record._id))}>
+                    </Button>
+                )}, 
+    ]
     return (
-        <table className="bordered-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Status</th>
-                    <th>Owner</th>
-                    <th>Created</th>
-                    <th>Effort</th>
-                    <th>Completion Date</th>
-                    <th>Title</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {issueRows}
-            </tbody>
-        </table>
+        <Table columns={columns} dataSource={dataSource} /> 
     )
 
-}
-
-const IssueRow = (props) => {
-    function onDeleteClick(){
-        props.deleteIssue(props.issue._id)
-    }
-    return(
-
-    <tr>
-        <td><Link to={`/issues/${props.issue._id}`}>{props.issue._id.substr(-4)}</Link></td>
-        <td>{props.issue.status}</td>
-        <td>{props.issue.owner}</td>
-        <td>{props.issue.created.toDateString()}</td>
-        <td>{props.issue.effort}</td>
-        <td>{props.issue.completionDate ? props.issue.completionDate.toDateString() : null}</td>
-        <td>{props.issue.title}</td>
-        <td>
-            <Button type="primary" icon='delete' size="small" onClick={onDeleteClick}>
-            </Button>
-        </td>
-    </tr>
-)
-    }
-
-IssueRow.propTypes = {
-    issue: PropTypes.shape({
-        title: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ])
-    }),
-    deleteIssue: PropTypes.func.isRequired
-}
-
-IssueRow.defaultProps = {
-        issue: {
-            title: '默认值'
-        }
 }
 
 
